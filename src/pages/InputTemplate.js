@@ -88,10 +88,13 @@ class InputTemplate extends Component{
     this.setState({dropdownMenu});
   }
 
-  // 과목 선택시 클릭 이벤트
+  /*
+    과목 추가시 클릭 이벤트
+    총 신청 학점이 계산되고 dropdown엔 추가한 항목이 삭제된다.
+  */
   _onSelectSubject = (selected) => {
     let {value, label} = selected;
-    let {selectedSubjects, currentGrade, alertMessage} = this.state;
+    let {selectedSubjects, currentGrade, alertMessage, dropdownMenu} = this.state;
     let grade=this._getGradeBySubjectId(value);
 
     if(currentGrade+grade >= 21){
@@ -105,22 +108,30 @@ class InputTemplate extends Component{
       this.setState({alertMessage});
       return;
     }
-
     alertMessage = `${label}을(를) 추가하였습니다.`;
     selectedSubjects.push({subjectName:label, subjectId:value, grade});
-    currentGrade += grade;
-    this.setState({selectedSubjects, alertMessage, currentGrade});
+    let updatedDropdownMenu = dropdownMenu.filter(e=>e.value !== value);
+    let updatedCurrentGarde = currentGrade+grade;
+    this.setState({selectedSubjects, alertMessage, currentGrade:updatedCurrentGarde, dropdownMenu:updatedDropdownMenu});
   }
 
-  // 과목 삭제시 클릭 이벤트
+  /*
+    과목 삭제시 클릭 이벤트
+    총 신청 학점이 누산되고 dropdown엔 삭제한 항목이 다시 추가된다.
+  */
   _onClickRemove = (subject) => {
-    let {selectedSubjects, alertMessage, currentGrade} = this.state;
+    let {selectedSubjects, alertMessage, currentGrade,dropdownMenu} = this.state;
     let {subjectName, subjectId} = subject;
     selectedSubjects = selectedSubjects.filter(e=>e.subjectId!==subjectId);
     alertMessage = `${subjectName}을 삭제하였습니다.`;
-    let grade = this._getGradeBySubjectId(subjectId);
-    currentGrade -= grade;
-    this.setState({selectedSubjects, alertMessage, currentGrade});
+
+    // 현재 학점에서 삭제한 학점 빼고 dropdown 리스트에 다시 추가
+    let subtractGrade = this._getGradeBySubjectId(subjectId);
+    let addDropDownItem = {"label":subjectName, "value":subjectId, "grade":subtractGrade};
+    let updatedDropdownMenu = dropdownMenu;
+    updatedDropdownMenu.push(addDropDownItem);
+    updatedDropdownMenu.sort((a,b)=>a.value < b.value ? -1 : a.value > b.value ? 1 : 0);
+    this.setState({selectedSubjects, alertMessage, currentGrade:currentGrade-subtractGrade, dropdownMenu:updatedDropdownMenu} , ()=>console.log(this.state));
   }
 
   // 예외 시간 클릭시 이벤트
@@ -146,10 +157,7 @@ class InputTemplate extends Component{
   }
 
   // 과목 이름 가져오기
-  _getGradeBySubjectId = (subjectId) => {
-    let {dropdownMenu} = this.state;
-    return dropdownMenu.find(e=>e.value===subjectId).grade;
-  }
+  _getGradeBySubjectId = (subjectId) => this.state.subjectDatas.find(e=>e.subjectId===subjectId).grade;
 
   _renderSubjectInputArea = () => {
     let {dropdownMenu, currentGrade} = this.state;
