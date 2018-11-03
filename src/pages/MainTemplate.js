@@ -21,7 +21,9 @@ export default class MainTemplate extends Component{
   }
 
   componentDidMount(){
-    this._makeScheduling();
+    setTimeout(()=>{
+      this._makeScheduling();
+    }, 200);
   }
 
   _makeScheduling = () => {
@@ -120,7 +122,7 @@ export default class MainTemplate extends Component{
       for (let j = 0; j < combination[i].length; j++) {
         let { day, time } = combination[i][j];
         for (let k = 0; k < time.length; k++) {
-          if(resultArray[time[k]][day] == 0){
+          if(resultArray[time[k]][day] === 0){
               resultArray[time[k]][day] = subjectId;
           }
         }
@@ -140,8 +142,9 @@ export default class MainTemplate extends Component{
     margin: 0 auto;
     border-color: red;
     `;
+    //
     return(
-      <div>
+      <div style={{textAlign:"center", width:"100%", backgroundColor:"#ffffff", marginTop:100}}>
         <ClipLoader
           className={override}
           sizeUnit={"px"}
@@ -149,9 +152,6 @@ export default class MainTemplate extends Component{
           color={'#123abc'}
           loading={!this.state.isFinishScheduling}
         />
-        <p>
-        시간표를 생성중 입니다...
-        </p>
       </div>
     );
   }
@@ -160,9 +160,9 @@ export default class MainTemplate extends Component{
   _renderEmpty = () => {
     return(
       <div style={{padding:20,marginTop:40, textAlign:"center"}}>
-        <img src="https://t1.daumcdn.net/cfile/tistory/136936475028AE1627"/>
+        <img src="/not_found.png" alt={"search not forund images"}/>
         <h5>조건에 일치하는 시간표가 존재하지 않습니다.</h5>
-        <button class="btn btn-primary" onClick={()=>this.setState({redirectToPrev:true})}>
+        <button className="btn btn-primary" onClick={()=>this.setState({redirectToPrev:true})}>
           과목 및 예외 시간 재설정
         </button>
       </div>
@@ -174,7 +174,7 @@ export default class MainTemplate extends Component{
         <div >
           <h4>※수강 신청 과목을 토대로 원치않는 시간을 제외한 시간표를 스케줄링 하였습니다.</h4>
           <p>총 <b>{this.state.resultTimeTableList.length}</b>가지 시간표를 찾았습니다.</p>
-          <button class="btn btn-primary" onClick={()=>this.setState({redirectToPrev:true})}>
+          <button className="btn btn-primary" onClick={()=>this.setState({redirectToPrev:true})}>
             과목 및 예외 시간 재설정
           </button>
         </div>
@@ -186,7 +186,9 @@ export default class MainTemplate extends Component{
     return (
       <div style={{padding:50}}>
       {this._renderGuideHeader()}
-      <TimeTableList resultTimeTableList={resultTimeTableList} subjectDatas={subjectDatas}/>
+      <TimeTableList
+        resultTimeTableList={resultTimeTableList}
+        subjectDatas={subjectDatas}/>
       </div>
     )
   }

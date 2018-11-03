@@ -1,0 +1,222 @@
+[
+  {
+    "subjectId": 1,
+    "title": "과목A",
+    "grade": 3,
+    "color": "#EF5350",
+    "lesson": [
+      [{
+          "day": 0,
+          "time": [0, 1]
+        },
+        {
+          "day": 3,
+          "time": [0, 1]
+        }
+      ],
+      [{
+          "day": 0,
+          "time": [1, 2]
+        },
+        {
+          "day": 2,
+          "time": [2, 3]
+        }
+      ],
+      [{
+          "day": 0,
+          "time": [2, 3]
+        },
+        {
+          "day": 4,
+          "time": [2, 3]
+        }
+      ]
+    ]
+  },
+  {
+    "subjectId": 2,
+    "title": "과목B",
+    "grade": 3,
+    "color": "#E91E63",
+    "lesson": [
+      [{
+          "day": 2,
+          "time": [2, 3]
+        },
+        {
+          "day": 4,
+          "time": [1, 2]
+        }
+      ],
+      [{
+          "day": 0,
+          "time": [4, 5]
+        },
+        {
+          "day": 1,
+          "time": [0, 1]
+        }
+      ],
+      [{
+          "day": 0,
+          "time": [4, 5]
+        },
+        {
+          "day": 4,
+          "time": [2, 3]
+        }
+      ]
+    ]
+  },
+  {
+    "subjectId": 3,
+    "title": "과목C",
+    "grade": 3,
+    "color": "#BA68C8",
+    "lesson": [
+      [{
+        "day": 0,
+        "time": [0, 1]
+      },
+      {
+        "day": 1,
+        "time": [2, 3]
+      }
+      ],
+      [{
+        "day": 2,
+        "time": [0, 1]
+      },
+      {
+        "day": 3,
+        "time": [2, 3]
+      }
+      ],
+      [{
+        "day": 2,
+        "time": [4, 5]
+      },
+      {
+        "day": 4,
+        "time": [2, 3]
+      }
+      ]
+    ]
+  },
+  {
+    "subjectId": 4,
+    "title": "과목D",
+    "grade": 3,
+    "color": "#7B1FA2",
+    "lesson": [
+      [
+      {
+        "day": 1,
+        "time": [4, 5]
+      },
+      {
+        "day": 2,
+        "time": [6, 7]
+      }
+      ],
+      [{
+        "day": 3,
+        "time": [6, 7]
+      },
+      {
+        "day": 4,
+        "time": [6, 7]
+      }],
+      [
+      {
+        "day": 1,
+        "time": [2, 3]
+      }
+      ,{
+        "day": 4,
+        "time": [0, 1]
+      }]
+    ]
+  },
+  {
+    "subjectId": 5,
+    "title": "과목E",
+    "grade": 2,
+    "color": "#3F51B5",
+    "lesson": [
+      [{
+        "day": 2,
+        "time": [4, 5]
+      }],
+      [{
+        "day": 3,
+        "time": [6, 7]
+      }],
+      [{
+        "day": 4,
+        "time": [0, 1]
+      }]
+    ]
+  },
+  {
+    "subjectId": 6,
+    "title": "과목F",
+    "grade": 2,
+    "color": "#4527A0",
+    "lesson": [
+      [{
+        "day": 1,
+        "time": [0, 1]
+      }],
+      [{
+        "day": 2,
+        "time": [2, 3]
+      }],
+      [{
+        "day": 3,
+        "time": [6, 7]
+      }]
+    ]
+  },
+  {
+    "subjectId": 7,
+    "title": "과목G",
+    "grade": 2,
+    "color": "#26C6DA",
+    "lesson": [
+      [{
+        "day": 0,
+        "time": [4, 5]
+      }],
+      [{
+        "day": 1,
+        "time": [6, 7]
+      }],
+      [{
+        "day": 2,
+        "time": [4, 5]
+      }]
+    ]
+  },
+  {
+    "subjectId": 8,
+    "title": "과목H",
+    "grade": 2,
+    "color": "#00796B",
+    "lesson": [
+      [{
+        "day": 2,
+        "time": [2, 3]
+      }],
+      [{
+        "day": 3,
+        "time": [6, 7]
+      }],
+      [{
+        "day": 4,
+        "time": [2, 3]
+      }]
+    ]
+  }
+]

@@ -11,9 +11,9 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App" style={{backgroundColor:"#f2f2f2"}}>
-        <Route exact path="/" component={InputTemplate}/>
-        <Route exact path="/timetable" component={MainTemplate}/>
+      <div className="App" style={{backgroundColor:"#f2f2f2", height:"100%"}}>
+        <Route exact path="/" component={InputTemplate} />
+        <Route exact path="/timetable" component={MainTemplate} />
       </div>
     );
   }

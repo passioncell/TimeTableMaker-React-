@@ -1,6 +1,5 @@
 
 import React, { Component } from 'react';
-import { css } from 'react-emotion';
 
 const EXCEPTION_TIME = -1; // 사용자가 원치않는 시간
 const EMPTY_TIME = 0; // 공강 시간
@@ -9,19 +8,18 @@ const weekNames = ["#", "월요일", "화요일", "수요일", "목요일", "금
 
 export default class TimeTableList extends Component{
 
-  constructor(props){
-    super(props);
-  }
-
   render(){
     let {resultTimeTableList, subjectDatas} = this.props;
 
     return (
       resultTimeTableList.map((tableData, index) => {
         return(
-          <div style={{marginTop:40}}>
+          <div style={{marginTop:40}} key={index}>
             <h5>순번 : {index+1}</h5>
-            <TimeTable tableData={tableData} subjectDatas={subjectDatas}/>
+            <TimeTable
+              tableData={tableData}
+              subjectDatas={subjectDatas}
+            />
           </div>
         )
       })
@@ -32,9 +30,6 @@ export default class TimeTableList extends Component{
 
 
 class TimeTable extends Component{
-  constructor(props){
-    super(props);
-  }
 
   _getSubjectNameById = (id) => {
     if(id===EMPTY_TIME) return "";
@@ -45,7 +40,7 @@ class TimeTable extends Component{
 
   _getSubjectColorById = (id) => {
     if(id===EMPTY_TIME) return "#ffffff";
-    if(id==EXCEPTION_TIME) return "#ffffff"
+    if(id===EXCEPTION_TIME) return "#ffffff";
     let {subjectDatas} = this.props
     return subjectDatas.find(({subjectId})=>id===subjectId).color;
   };
@@ -54,11 +49,11 @@ class TimeTable extends Component{
     const {tableData} = this.props;
 
     return(
-      <table class="table table-hover" style={{backgroundColor:"#fff"}}>
+      <table className="table table-hover" style={{backgroundColor:"#fff"}}>
         <thead>
           <tr>
           {
-            weekNames.map((e, i) => <th>{e}</th>)
+            weekNames.map((e, i) => <th key={i}>{e}</th>)
           }
           </tr>
         </thead>
@@ -66,8 +61,8 @@ class TimeTable extends Component{
           {
             tableData.map((e, i) => {
               return (
-                <tr>
-                <td>
+                <tr key={i}>
+                <td key={i}>
                 {
                   classTime[i]
                 }
@@ -75,7 +70,7 @@ class TimeTable extends Component{
                 {
                   tableData[i].map((e2, i2) => {
                     return (
-                      <td bgcolor = {this._getSubjectColorById(e2)}>
+                      <td key={i2} bgcolor = {this._getSubjectColorById(e2)}>
                         {this._getSubjectNameById(e2)}
                       </td>
                     )

@@ -1,220 +1,30 @@
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
 
-const DAY = {
-  MONDAY: 0,
-  TUESDAY: 1,
-  WEDNESDAY: 2,
-  THURSDAY: 3,
-  FRIDAY: 4
-};
-const TIME = {
-  FIRST: 0,
-  SECOND: 1,
-  THIRD: 2,
-  FORTH: 3,
-  FIFTH: 4,
-  SIXTH: 5,
-  SEVENTH: 6,
-  EIGHT: 7
-};
-const MIN_GRADE = 5;
-const MAX_GRADE = 10;
-const dummyData = [
-  {
-    subjectId: 1,
-    title: "과목A",
-    grade: 3,
-    color: "#EF5350",
-    lesson: [ // lesson안에는 총 3 타입의 수강 요일과 타임이 있습니다.
-      [{
-          day: DAY.MONDAY,
-          time: [TIME.FIRST, TIME.SECOND]
-        },
-        {
-          day: DAY.THURSDAY,
-          time: [TIME.FIRST, TIME.SECOND]
-        }
-      ], // 월목 1교시가 한세트
-      [{
-          day: DAY.TUESDAY,
-          time: [TIME.FIRST, TIME.SECOND]
-        },
-        {
-          day: DAY.WEDNESDAY,
-          time: [TIME.FIRST, TIME.SECOND]
-        }
-      ], // 수목 1교시가 한세트
-      [{
-          day: DAY.MONDAY,
-          time: [TIME.THIRD, TIME.FORTH]
-        },
-        {
-          day: DAY.FRIDAY,
-          time: [TIME.THIRD, TIME.FORTH]
-        }
-      ]
-    ]
-  },
-  {
-    subjectId: 2,
-    title: "과목B",
-    grade: 3,
-    color: "#E91E63",
-    lesson: [
-      [{
-          day: DAY.WEDNESDAY,
-          time: [TIME.THIRD, TIME.FORTH]
-        },
-        {
-          day: DAY.FRIDAY,
-          time: [TIME.THIRD, TIME.FORTH]
-        }
-      ],
-      [{
-          day: DAY.MONDAY,
-          time: [TIME.FIFTH, TIME.SIXTH]
-        },
-        {
-          day: DAY.TUESDAY,
-          time: [TIME.FIRST, TIME.SECOND]
-        }
-      ],
-      [{
-          day: DAY.MONDAY,
-          time: [TIME.FIFTH, TIME.SIXTH]
-        },
-        {
-          day: DAY.FRIDAY,
-          time: [TIME.THIRD, TIME.FORTH]
-        }
-      ]
-    ]
-  },
-  {
-    subjectId: 3,
-    title: "과목C",
-    grade: 2,
-    color: "#BA68C8",
-    lesson: [
-      [{
-        day: DAY.MONDAY,
-        time: [TIME.FIFTH, TIME.SIXTH]
-      }],
-      [{
-        day: DAY.TUESDAY,
-        time: [TIME.SEVENTH, TIME.EIGHT]
-      }],
-      [{
-        day: DAY.WEDNESDAY,
-        time: [TIME.FIFTH, TIME.SIXTH]
-      }]
-    ]
-  },
-  {
-    subjectId: 4,
-    title: "과목D",
-    grade: 2,
-    color: "#7B1FA2",
-    lesson: [
-      [{
-        day: DAY.WEDNESDAY,
-        time: [TIME.FIRST, TIME.SECOND]
-      }],
-      [{
-        day: DAY.THURSDAY,
-        time: [TIME.SEVENTH, TIME.EIGHT]
-      }],
-      [{
-        day: DAY.FRIDAY,
-        time: [TIME.FIRST, TIME.SECOND]
-      }]
-    ]
-  },
-  {
-    subjectId: 5,
-    title: "과목E",
-    grade: 2,
-    color: "#3F51B5",
-    lesson: [
-      [{
-        day: DAY.WEDNESDAY,
-        time: [TIME.THIRD, TIME.FORTH]
-      }],
-      [{
-        day: DAY.THURSDAY,
-        time: [TIME.SEVENTH, TIME.EIGHT]
-      }],
-      [{
-        day: DAY.FRIDAY,
-        time: [TIME.THIRD, TIME.FORTH]
-      }]
-    ]
-  },
-  {
-    subjectId: 6,
-    title: "과목F",
-    grade: 2,
-    color: "#4527A0",
-    lesson: [
-      [{
-        day: DAY.WEDNESDAY,
-        time: [TIME.THIRD, TIME.FORTH]
-      }],
-      [{
-        day: DAY.THURSDAY,
-        time: [TIME.SEVENTH, TIME.EIGHT]
-      }],
-      [{
-        day: DAY.FRIDAY,
-        time: [TIME.THIRD, TIME.FORTH]
-      }]
-    ]
-  },
-  {
-    subjectId: 7,
-    title: "과목G",
-    grade: 2,
-    color: "#26C6DA",
-    lesson: [
-      [{
-        day: DAY.WEDNESDAY,
-        time: [TIME.THIRD, TIME.FORTH]
-      }],
-      [{
-        day: DAY.THURSDAY,
-        time: [TIME.SEVENTH, TIME.EIGHT]
-      }],
-      [{
-        day: DAY.FRIDAY,
-        time: [TIME.THIRD, TIME.FORTH]
-      }]
-    ]
-  },
-  {
-    subjectId: 8,
-    title: "과목H",
-    grade: 2,
-    color: "#00796B",
-    lesson: [
-      [{
-        day: DAY.WEDNESDAY,
-        time: [TIME.THIRD, TIME.FORTH]
-      }],
-      [{
-        day: DAY.THURSDAY,
-        time: [TIME.SEVENTH, TIME.EIGHT]
-      }],
-      [{
-        day: DAY.FRIDAY,
-        time: [TIME.THIRD, TIME.FORTH]
-      }]
-    ]
-  }
-];
+/*
+  신청 가능 학점 범위 설정
+*/
+const MIN_GRADE = 18;
+const MAX_GRADE = 21;
 
+/*
+  서비스 배포 버전인지 로컬 개발버전인지 확인
+*/
+const MODE_TYPE = {LOCAL:"local", PUBLIC:"public"};
+const MODE = MODE_TYPE.LOCAL;
+
+/*
+  로컬 버전인 경우 더미 데이터 사용
+*/
+const DUMMY_DATA = require('../dummyData.json');
+
+
+
+/*
+  사용자의 입력을 받는 템플릿
+*/
 class InputTemplate extends Component{
 
   constructor() {
@@ -226,49 +36,55 @@ class InputTemplate extends Component{
       subjectDatas: [],
       selectedSubjects: [],
       isRedirectNextStep: false,
-      exceptionTime: this._initArray()
+      exceptionTime: [
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0]
+      ]
     };
   }
 
   componentDidMount(){
-    this._initSubject();
+    this._requestSubjectDatas()
+    .then(subjectDatas=>this.setState({subjectDatas}))
+    .then(()=>this._initDropdownMenu())
+    .catch(e=>console.error(e));
+
     this._onSelectSubject = this._onSelectSubject.bind(this);
     this._onClickRemove = this._onClickRemove.bind(this);
     this._onClickSubmit = this._onClickSubmit.bind(this);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    console.log(this.state);
+
+  // 과목 데이터 불러오기
+  _requestSubjectDatas = () => {
+    return new Promise((resolve,reject) => {
+      if(MODE === MODE_TYPE.PUBLIC){
+        fetch("http://localhost:3005/api/subjects")
+        .then(res=>resolve(res.json()))
+        .catch(e=>reject(e));
+      }
+      else{
+        return resolve(DUMMY_DATA);
+      }
+    });
   }
 
-  _initArray = () => {
-    let array = [
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0]
-    ]
-
-    return array;
-  }
-
-  _initSubject = () => {
-    let dropdownMenu = this._getDropdownMenuItems();
+  // 과목 드롭 다운 메뉴 초기화
+  _initDropdownMenu = () => {
+    let dropdownMenu = [];
+    this.state.subjectDatas.forEach((e,i)=> {
+      dropdownMenu.push({label:e.title+"("+e.grade+"학점)", value:e.subjectId, grade:e.grade});
+    });
     this.setState({dropdownMenu});
   }
 
-  _getDropdownMenuItems = () => {
-    let dropdownMenu = [];
-    dummyData.forEach((e,i)=> {
-      dropdownMenu.push({label:e.title+"("+e.grade+"학점)", value:e.subjectId, grade:e.grade});
-    });
-    return dropdownMenu;
-  }
-
+  // 과목 선택시 클릭 이벤트
   _onSelectSubject = (selected) => {
     let {value, label} = selected;
     let {selectedSubjects, currentGrade, alertMessage} = this.state;
@@ -292,6 +108,7 @@ class InputTemplate extends Component{
     this.setState({selectedSubjects, alertMessage, currentGrade});
   }
 
+  // 과목 삭제시 클릭 이벤트
   _onClickRemove = (subject) => {
     let {selectedSubjects, alertMessage, currentGrade} = this.state;
     let {subjectName, subjectId} = subject;
@@ -302,6 +119,14 @@ class InputTemplate extends Component{
     this.setState({selectedSubjects, alertMessage, currentGrade});
   }
 
+  // 예외 시간 클릭시 이벤트
+  _onClickExceptionTime = (row, cols) => {
+    let {exceptionTime} = this.state;
+    exceptionTime[row][cols] = exceptionTime[row][cols] === -1 ? 0 : -1;
+    this.setState({exceptionTime});
+  }
+
+  // 스케쥴링 시작 버튼 클릭시 이벤트
   _onClickSubmit = () => {
     let {currentGrade, alertMessage} = this.state;
     if(currentGrade<MIN_GRADE || currentGrade>MAX_GRADE){
@@ -314,19 +139,20 @@ class InputTemplate extends Component{
     this.setState({alertMessage, isRedirectNextStep:true}, ()=>{
       console.log(this.state);
     });
-
   }
 
+  // 과목 이름 가져오기
   _getGradeBySubjectId = (subjectId) => {
     let {dropdownMenu} = this.state;
     return dropdownMenu.find(e=>e.value===subjectId).grade;
   }
 
+
   _renderSubjectInputArea = () => {
     let {dropdownMenu, currentGrade} = this.state;
     return(
-      <div>
-      <h4>Step 1. <small>수강하고 싶은 과목을 15~18학점 사이로 선택해주세요.</small></h4>
+      <div className="inputArea">
+      <h4>Step 1. <small>수강하고 싶은 과목을 18~21학점 사이로 선택해주세요.</small></h4>
         <Dropdown
           options={dropdownMenu}
           onChange={this._onSelectSubject}
@@ -335,14 +161,14 @@ class InputTemplate extends Component{
         <ul>
           {this.state.selectedSubjects.map((e,i)=>{
             return(
-                <li key={i} style={{marginTop:5, padding:5}}>
+                <li key={i} style={{marginTop:5, padding:5}} >
                   {e.subjectName}
-                  <button class="btn btn-danger btn-sm" onClick={()=>this._onClickRemove(e)} style={{marginLeft:10}}>삭제</button>
+                  <button className="btn btn-danger btn-sm" onClick={()=>this._onClickRemove(e)} style={{marginLeft:10}}>삭제</button>
                 </li>
             )
           })}
         </ul>
-        <div class="alert alert-info" role="alert">
+        <div className="alert alert-info" role="alert">
           {`총 신청 학점 : ${currentGrade}`}
         </div>
         {this._renderAlertMessage()}
@@ -351,34 +177,33 @@ class InputTemplate extends Component{
   }
 
   _renderExceptionTimeSeletor = () => {
-    let rows = [1,2,3,4,5,6,7,8];
-    let cols = [1,2,3,4,5,6];
+    const rows = [1,2,3,4,5,6,7,8];
+    const cols = [1,2,3,4,5,6];
+    const weeks = ["#", "월요일", "화요일", "수요일", "목요일", "금요일"];
     let {exceptionTime} = this.state;
     return(
       <div>
       <h4>Step 2. <small>비워두고 싶은 시간을 마킹하세요.</small></h4>
-      <table class="table table-hover" style={{backgroundColor:"#fff"}}>
+      <table className="table table-hover" style={{backgroundColor:"#fff"}}>
         <thead>
-          <th>#</th>
-          <th>월요일</th>
-          <th>화요일</th>
-          <th>수요일</th>
-          <th>목요일</th>
-          <th>금요일</th>
+          <tr>
+            {weeks.map((weekName, index)=><th key={index}>{weekName}</th>)}
+          </tr>
         </thead>
         <tbody>
         {
           rows.map((e,i) => {
             return(
-              <tr>
+              <tr key={i}>
               {
                 cols.map((e2,i2)=>{
                 return(
                   i2===0 ?
-                  <td>{i+1}</td> :
+                  <td key={i2}>{i+1}</td> :
                   <td
+                    key={i2}
                     onClick={()=>this._onClickExceptionTime(i, i2-1)}
-                    style={ exceptionTime[i][i2-1] == -1 ? {backgroundColor:"#E9573F"} : {} }
+                    style={ exceptionTime[i][i2-1] === -1 ? {backgroundColor:"#E9573F"} : {} }
                   >
                   CLICK
                   </td>
@@ -403,12 +228,6 @@ class InputTemplate extends Component{
     )
   }
 
-  _onClickExceptionTime = (row, cols) => {
-    let {exceptionTime} = this.state;
-    exceptionTime[row][cols] = exceptionTime[row][cols] === -1 ? 0 : -1;
-    this.setState({exceptionTime});
-  }
-
 
   render() {
     let {subjectDatas, selectedSubjects, exceptionTime, isRedirectNextStep} = this.state;
@@ -417,16 +236,16 @@ class InputTemplate extends Component{
         <Redirect
           to={{
             pathname:"/timetable",
-            state: {subjectDatas:dummyData, selectedSubjects, exceptionTime}
+            state: {subjectDatas, selectedSubjects, exceptionTime}
           }}/>
       )
     }
     return (
-      <div style={{padding:50}}>
+      <div style={{padding:50, height:"100%"}}>
         {this._renderSubjectInputArea()}
         {this._renderExceptionTimeSeletor()}
         <h4>Final Step. <small>아래 버튼을 누르시면 스케줄링을 시작합니다.</small></h4>
-        <button class="btn btn-primary " onClick={this._onClickSubmit}>
+        <button className="btn btn-primary " onClick={this._onClickSubmit}>
           스케쥴링 시작
         </button>
       </div>
