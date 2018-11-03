@@ -37,6 +37,7 @@ class InputTemplate extends Component{
       dropdownMenu: [],
       alertMessage:"",
       currentGrade: 0,
+      subjectGuideDatas: [],
       subjectDatas: [],
       selectedSubjects: [],
       isRedirectNextStep: false,
@@ -56,6 +57,8 @@ class InputTemplate extends Component{
   componentDidMount(){
     this._requestSubjectDatas()
     .then(subjectDatas=>this.setState({subjectDatas}))
+    .then(()=>this._requestSubjectGuideDatas())
+    .then(subjectGuideDatas=>this.setState({subjectGuideDatas}))
     .then(()=>this._initDropdownMenu())
     .catch(e=>console.error(e));
 
@@ -68,14 +71,18 @@ class InputTemplate extends Component{
   // 과목 데이터 불러오기
   _requestSubjectDatas = () => {
     return new Promise((resolve,reject) => {
-      if(MODE === MODE_TYPE.PUBLIC){
-        fetch(Api.getSubjects())
-        .then(res=>resolve(res.json()))
-        .catch(e=>reject(e));
-      }
-      else{
-      return resolve(DUMMY_DATA);
-      }
+      fetch(Api.getSubjects())
+      .then(res=>resolve(res.json()))
+      .catch(e=>reject(e));
+    });
+  }
+
+  // 과목 설명 데이터 불러오기
+  _requestSubjectGuideDatas = () => {
+    return new Promise((resolve, reject) => {
+      fetch(Api.getSubjectsGuide())
+      .then(res=>resolve(res.json()))
+      .catch(e=>reject(e));
     });
   }
 
@@ -159,11 +166,42 @@ class InputTemplate extends Component{
   // 과목 이름 가져오기
   _getGradeBySubjectId = (subjectId) => this.state.subjectDatas.find(e=>e.subjectId===subjectId).grade;
 
+  _renderSubjectGuide = () => {
+    let { subjectGuideDatas } = this.state;
+
+    return (
+      <div>
+        <h4>Step 1. <small>수강 신청 가능한 과목을 확인하세요.</small></h4>
+        <table className="table table-hover" style={{backgroundColor:"#fff"}}>
+          <thead>
+            <tr>
+              <th>과목명</th>
+              <th>취득 학점</th>
+              <th>요일 및 시간</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              subjectGuideDatas.map((e,i)=> {
+              return(
+                <tr key={i}>
+                  <td>{e.title} (#타입 {i%3+1})</td>
+                  <td>{e.grade}학점</td>
+                  <td>{e.dayAndTime}</td>
+                </tr>
+              )})
+            }
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+
   _renderSubjectInputArea = () => {
     let {dropdownMenu, currentGrade} = this.state;
     return(
       <div className="inputArea">
-      <h4>Step 1. <small>수강하고 싶은 과목을 18~21학점 사이로 선택해주세요.</small></h4>
+      <h4>Step 2. <small>수강하고 싶은 과목을 18~21학점 사이로 선택해주세요.</small></h4>
         <Dropdown
           options={dropdownMenu}
           onChange={this._onSelectSubject}
@@ -194,7 +232,7 @@ class InputTemplate extends Component{
     let {exceptionTime} = this.state;
     return(
       <div>
-      <h4>Step 2. <small>비워두고 싶은 시간을 마킹하세요.</small></h4>
+      <h4>Step 3. <small>비워두고 싶은 시간을 마킹하세요.</small></h4>
       <table className="table table-hover" style={{backgroundColor:"#fff"}}>
         <thead>
           <tr>
@@ -253,6 +291,7 @@ class InputTemplate extends Component{
     }
     return (
       <div style={{padding:50}}>
+        {this._renderSubjectGuide()}
         {this._renderSubjectInputArea()}
         {this._renderExceptionTimeSeletor()}
         <h4>Final Step. <small>아래 버튼을 누르시면 스케줄링을 시작합니다.</small></h4>
