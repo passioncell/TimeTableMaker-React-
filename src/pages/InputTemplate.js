@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import Dropdown from 'react-dropdown'
-import 'react-dropdown/style.css'
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
+import * as Api from '../api/Api';
 
 /*
   신청 가능 학점 범위 설정
@@ -10,10 +11,13 @@ const MIN_GRADE = 18;
 const MAX_GRADE = 21;
 
 /*
-  서비스 배포 버전인지 로컬 개발버전인지 확인
+  서비스 버전인지 로컬 개발버전인지 확인
+  개발 버전은 로컬 더미 데이터 사용
+  서비스 버전은 API 서버에서 데이터 취득
+
 */
 const MODE_TYPE = {LOCAL:"local", PUBLIC:"public"};
-const MODE = MODE_TYPE.LOCAL;
+const MODE = MODE_TYPE.PUBLIC;
 
 /*
   로컬 버전인 경우 더미 데이터 사용
@@ -27,8 +31,8 @@ const DUMMY_DATA = require('../dummyData.json');
 */
 class InputTemplate extends Component{
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       dropdownMenu: [],
       alertMessage:"",
@@ -65,12 +69,12 @@ class InputTemplate extends Component{
   _requestSubjectDatas = () => {
     return new Promise((resolve,reject) => {
       if(MODE === MODE_TYPE.PUBLIC){
-        fetch("http://localhost:3005/api/subjects")
+        fetch(Api.getSubjects())
         .then(res=>resolve(res.json()))
         .catch(e=>reject(e));
       }
       else{
-        return resolve(DUMMY_DATA);
+      return resolve(DUMMY_DATA);
       }
     });
   }
@@ -146,7 +150,6 @@ class InputTemplate extends Component{
     let {dropdownMenu} = this.state;
     return dropdownMenu.find(e=>e.value===subjectId).grade;
   }
-
 
   _renderSubjectInputArea = () => {
     let {dropdownMenu, currentGrade} = this.state;
@@ -241,7 +244,7 @@ class InputTemplate extends Component{
       )
     }
     return (
-      <div style={{padding:50, height:"100%"}}>
+      <div style={{padding:50}}>
         {this._renderSubjectInputArea()}
         {this._renderExceptionTimeSeletor()}
         <h4>Final Step. <small>아래 버튼을 누르시면 스케줄링을 시작합니다.</small></h4>
