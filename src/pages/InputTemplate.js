@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import * as Api from '../api/Api';
+import { ToastStore } from 'react-toasts';
 
 /*
   신청 가능 학점 범위 설정
@@ -16,13 +17,13 @@ const MAX_GRADE = 21;
   서비스 버전은 API 서버에서 데이터 취득
 
 */
-const MODE_TYPE = {LOCAL:"local", PUBLIC:"public"};
-const MODE = MODE_TYPE.PUBLIC;
+// const MODE_TYPE = {LOCAL:"local", PUBLIC:"public"};
+// const MODE = MODE_TYPE.PUBLIC;
 
 /*
   로컬 버전인 경우 더미 데이터 사용
 */
-const DUMMY_DATA = require('../dummyData.json');
+// const DUMMY_DATA = require('../dummyData.json');
 
 
 
@@ -106,20 +107,25 @@ class InputTemplate extends Component{
 
     if(currentGrade+grade >= 21){
       alertMessage = "21학점 까지만 신청가능합니다.";
-      this.setState({alertMessage});
+      this.setState({alertMessage},()=>ToastStore.error(alertMessage));
       return;
     }
 
     if(selectedSubjects.find(({subjectId})=>subjectId===value)!==undefined){
       alertMessage = "중복된 과목을 신청하셨습니다.";
-      this.setState({alertMessage});
+      this.setState({alertMessage}, ()=>ToastStore.error(alertMessage));
       return;
     }
     alertMessage = `${label}을(를) 추가하였습니다.`;
     selectedSubjects.push({subjectName:label, subjectId:value, grade});
     let updatedDropdownMenu = dropdownMenu.filter(e=>e.value !== value);
     let updatedCurrentGarde = currentGrade+grade;
-    this.setState({selectedSubjects, alertMessage, currentGrade:updatedCurrentGarde, dropdownMenu:updatedDropdownMenu});
+
+    this.setState({selectedSubjects,
+    alertMessage,
+    currentGrade:updatedCurrentGarde,
+    dropdownMenu:updatedDropdownMenu},
+    ()=>ToastStore.success(alertMessage+` (현재학점 : ${this.state.currentGrade})`));
   }
 
   /*
@@ -138,7 +144,13 @@ class InputTemplate extends Component{
     let updatedDropdownMenu = dropdownMenu;
     updatedDropdownMenu.push(addDropDownItem);
     updatedDropdownMenu.sort((a,b)=>a.value < b.value ? -1 : a.value > b.value ? 1 : 0);
-    this.setState({selectedSubjects, alertMessage, currentGrade:currentGrade-subtractGrade, dropdownMenu:updatedDropdownMenu} , ()=>console.log(this.state));
+
+    this.setState({
+    selectedSubjects,
+    alertMessage,
+    currentGrade:currentGrade-subtractGrade,
+    dropdownMenu:updatedDropdownMenu},
+    ()=>ToastStore.success(alertMessage+` (현재학점 : ${this.state.currentGrade})`));
   }
 
   // 예외 시간 클릭시 이벤트
@@ -153,14 +165,12 @@ class InputTemplate extends Component{
     let {currentGrade, alertMessage} = this.state;
     if(currentGrade<MIN_GRADE || currentGrade>MAX_GRADE){
       alertMessage = "스케줄링을 위해선 18학점~21학점 사이로 선택해주세요.";
-      this.setState({alertMessage});
+      this.setState({alertMessage}, ()=>ToastStore.error(alertMessage));
       return;
     }
 
     alertMessage = "신청완료!";
-    this.setState({alertMessage, isRedirectNextStep:true}, ()=>{
-      console.log(this.state);
-    });
+    this.setState({alertMessage, isRedirectNextStep:true}, ()=>ToastStore.success(alertMessage));
   }
 
   // 과목 이름 가져오기
@@ -220,7 +230,6 @@ class InputTemplate extends Component{
         <div className="alert alert-info" role="alert">
           {`총 신청 학점 : ${currentGrade}`}
         </div>
-        {this._renderAlertMessage()}
       </div>
     )
   }
@@ -268,15 +277,6 @@ class InputTemplate extends Component{
       </div>
     );
   }
-
-  _renderAlertMessage = () => {
-    return (
-      <p style={{color:"red", marginBottom:50}}>
-        {this.state.alertMessage}
-      </p>
-    )
-  }
-
 
   render() {
     let {subjectDatas, selectedSubjects, exceptionTime, isRedirectNextStep} = this.state;

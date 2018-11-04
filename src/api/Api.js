@@ -2,7 +2,7 @@
   SERVER HOST INFOMATION..
 */
 const PORT = 3005;
-const HOST = "http://localhost:"+PORT+"/";
+const HOST = "http://114.70.234.108:"+PORT+"/";
 
 /*
 [GET]

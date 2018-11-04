@@ -21,9 +21,7 @@ export default class MainTemplate extends Component{
   }
 
   componentDidMount(){
-    setTimeout(()=>{
-      this._makeScheduling();
-    }, 200);
+    setTimeout(()=>this._makeScheduling(), 200);
   }
 
   _makeScheduling = () => {
