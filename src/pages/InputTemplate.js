@@ -34,6 +34,7 @@ class InputTemplate extends Component{
 
   constructor(props) {
     super(props);
+    console.log(this.props);
     this.state = {
       dropdownMenu: [],
       alertMessage:"",
@@ -56,12 +57,18 @@ class InputTemplate extends Component{
   }
 
   componentDidMount(){
-    this._requestSubjectDatas()
-    .then(subjectDatas=>this.setState({subjectDatas}))
-    .then(()=>this._requestSubjectGuideDatas())
-    .then(subjectGuideDatas=>this.setState({subjectGuideDatas}))
-    .then(()=>this._initDropdownMenu())
-    .catch(e=>console.error(e));
+
+    if(this.props.location.state){
+        this.setState(this.props.location.state);
+    }
+    else{
+      this._requestSubjectDatas()
+      .then(subjectDatas=>this.setState({subjectDatas}))
+      .then(()=>this._requestSubjectGuideDatas())
+      .then(subjectGuideDatas=>this.setState({subjectGuideDatas}))
+      .then(()=>this._initDropdownMenu())
+      .catch(e=>console.error(e));
+    }
 
     this._onSelectSubject = this._onSelectSubject.bind(this);
     this._onClickRemove = this._onClickRemove.bind(this);
@@ -279,13 +286,13 @@ class InputTemplate extends Component{
   }
 
   render() {
-    let {subjectDatas, selectedSubjects, exceptionTime, isRedirectNextStep} = this.state;
+    let {isRedirectNextStep} = this.state;
     if(isRedirectNextStep){
       return(
         <Redirect
           to={{
             pathname:"/timetable",
-            state: {subjectDatas, selectedSubjects, exceptionTime}
+            state: this.state
           }}/>
       )
     }

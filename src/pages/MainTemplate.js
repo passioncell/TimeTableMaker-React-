@@ -192,8 +192,23 @@ export default class MainTemplate extends Component{
   }
 
   _renderRedirectPrev = () => {
+    let {dropdownMenu, subjectDatas, currentGrade,subjectGuideDatas,
+      subjectDats, selectedSubjects, exceptionTime} = this.props.location.state;
+    let prevState = {
+      dropdownMenu,
+      alertMessage:"",
+      currentGrade,
+      subjectGuideDatas,
+      subjectDatas,
+      selectedSubjects,
+      isRedirectNextStep:false,
+      exceptionTime
+  }
     return (
-      <Redirect to={{pathname:"/"}}/>
+      <Redirect to={{
+        pathname:"/",
+        state: prevState
+      }}/>
     )
   }
 
